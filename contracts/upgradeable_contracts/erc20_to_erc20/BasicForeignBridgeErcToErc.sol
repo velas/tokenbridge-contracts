@@ -2,8 +2,11 @@ pragma solidity 0.4.24;
 
 import "../BasicForeignBridge.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
+import "../../libraries/SafeERC20.sol";
 
 contract BasicForeignBridgeErcToErc is BasicForeignBridge {
+    using SafeERC20 for ERC20;
+
     function _initialize(
         address _validatorContract,
         address _erc20token,
@@ -51,7 +54,9 @@ contract BasicForeignBridgeErcToErc is BasicForeignBridge {
     ) internal returns (bool) {
         addTotalExecutedPerDay(getCurrentDay(), _amount);
         uint256 amount = _unshiftValue(_amount);
-        return erc20token().transfer(_recipient, amount);
+
+        erc20token().safeTransfer(_recipient, amount);
+        return true;
     }
 
     function onFailedMessage(address, uint256, bytes32) internal {
