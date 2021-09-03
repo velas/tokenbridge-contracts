@@ -25,7 +25,7 @@ contract ERC20Bridge is BasicForeignBridge {
         require(withinLimit(_amount));
         addTotalSpentPerDay(getCurrentDay(), _amount);
 
-        erc20token().safeTransferFrom(address(this), _amount);
+        erc20token().safeTransferFrom(msg.sender, _amount);
         emit UserRequestForAffirmation(_receiver, _amount);
     }
 }
